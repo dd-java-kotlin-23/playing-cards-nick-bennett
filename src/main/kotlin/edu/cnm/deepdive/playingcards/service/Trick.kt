@@ -30,6 +30,7 @@ class Trick(deck: Deck) {
 
     fun swap(count: Int) {
         // DONE: Swap count cards between _redPile and _blackPile, as long as count <= size of smaller pile.
+        require(count <= _blackPile.size && count <= _redPile.size)
         for (i in 0 until count) {
             _blackPile.add(_redPile.removeFirst())
             _redPile.add(_blackPile.removeFirst())
