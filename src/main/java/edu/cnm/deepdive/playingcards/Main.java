@@ -24,27 +24,17 @@ public class Main {
 
     class ColorComparator implements Comparator<Card> {
 
-      private static final Comparator<Card> COMPARATOR =
-          Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
-              .thenComparing(Comparator.naturalOrder());
-
-      private final boolean colorReversed;
-
-      public ColorComparator(boolean colorReversed) {
-        this.colorReversed = colorReversed;
-      }
-
       @Override
       public int compare(Card card1, Card card2) {
-        return colorReversed
-            ? COMPARATOR.reversed().compare(card1, card2)
-            : COMPARATOR.compare(card1, card2);
+        return Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
+            .thenComparing(Comparator.naturalOrder())
+            .compare(card1, card2);
       }
 
     }
 
-    Comparator<Card> blackFirstComparator = new ColorComparator(false);
-    Comparator<Card> redFirstComparator = new ColorComparator(true);
+    Comparator<Card> blackFirstComparator = new ColorComparator();
+    Comparator<Card> redFirstComparator = new ColorComparator().reversed();
 
     blackPile.sort(blackFirstComparator);
     redPile.sort(redFirstComparator);
