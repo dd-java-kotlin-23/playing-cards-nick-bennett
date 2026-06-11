@@ -22,6 +22,27 @@ public class Main {
     List<Card> blackPile = new ArrayList<>(trick.getBlackPile());
     List<Card> redPile = new ArrayList<>(trick.getRedPile());
 
+    class ColorComparator implements Comparator<Card> {
+
+      private static final Comparator<Card> COMPARATOR =
+          Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
+              .thenComparing(Comparator.naturalOrder());
+
+      private final boolean colorReversed;
+
+      public ColorComparator(boolean colorReversed) {
+        this.colorReversed = colorReversed;
+      }
+
+      @Override
+      public int compare(Card card1, Card card2) {
+        return colorReversed
+            ? COMPARATOR.reversed().compare(card1, card2)
+            : COMPARATOR.compare(card1, card2);
+      }
+
+    }
+
     Comparator<Card> blackFirstComparator = new ColorComparator(false);
     Comparator<Card> redFirstComparator = new ColorComparator(true);
 
@@ -40,28 +61,6 @@ public class Main {
 
     System.out.printf("Black count = %2$d; black pile = %1$s%n", CardListView.toString(blackPile), blackCount);
     System.out.printf("Red count = %2$d; red pile = %1$s%n", CardListView.toString(redPile), redCount);
-  }
-
-
-  private static class ColorComparator implements Comparator<Card> {
-
-    private static final Comparator<Card> COMPARATOR =
-        Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
-            .thenComparing(Comparator.naturalOrder());
-
-    private final boolean colorReversed;
-
-    public ColorComparator(boolean colorReversed) {
-      this.colorReversed = colorReversed;
-    }
-
-    @Override
-    public int compare(Card card1, Card card2) {
-      return colorReversed
-          ? COMPARATOR.reversed().compare(card1, card2)
-          : COMPARATOR.compare(card1, card2);
-    }
-
   }
 
 }
