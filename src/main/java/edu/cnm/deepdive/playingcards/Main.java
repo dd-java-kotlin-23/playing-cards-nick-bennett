@@ -22,19 +22,13 @@ public class Main {
     List<Card> blackPile = new ArrayList<>(trick.getBlackPile());
     List<Card> redPile = new ArrayList<>(trick.getRedPile());
 
-    Comparator<Card> blackFirstComparator = new Comparator<Card>() {
-      @Override
-      public int compare(Card card1, Card card2) {
-        return Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
-            .thenComparing(Comparator.naturalOrder())
-            .compare(card1, card2);
-      }
-    };
-
-    Comparator<Card> redFirstComparator = blackFirstComparator.reversed();
+    Comparator<Card> blackFirstComparator = (card1, card2) ->
+        Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
+        .thenComparing(Comparator.naturalOrder())
+        .compare(card1, card2);
 
     blackPile.sort(blackFirstComparator);
-    redPile.sort(redFirstComparator);
+    redPile.sort(blackFirstComparator.reversed());
 
     long blackCount = blackPile
         .stream()
