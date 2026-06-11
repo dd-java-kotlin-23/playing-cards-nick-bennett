@@ -22,13 +22,11 @@ public class Main {
     List<Card> blackPile = new ArrayList<>(trick.getBlackPile());
     List<Card> redPile = new ArrayList<>(trick.getRedPile());
 
-    Comparator<Card> blackFirstComparator = (card1, card2) ->
-        Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
-        .thenComparing(Comparator.naturalOrder())
-        .compare(card1, card2);
-
-    blackPile.sort(blackFirstComparator);
-    redPile.sort(blackFirstComparator.reversed());
+    blackPile.sort(Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
+        .thenComparing(Comparator.naturalOrder()));
+    redPile.sort(Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
+        .reversed()
+        .thenComparing(Comparator.naturalOrder()));
 
     long blackCount = blackPile
         .stream()
@@ -40,8 +38,10 @@ public class Main {
         .takeWhile((card) -> card.suit().color() == Color.RED)
         .count();
 
-    System.out.printf("Black count = %2$d; black pile = %1$s%n", CardListView.toString(blackPile), blackCount);
-    System.out.printf("Red count = %2$d; red pile = %1$s%n", CardListView.toString(redPile), redCount);
+    System.out.printf("Black count = %2$d; black pile = %1$s%n", CardListView.toString(blackPile),
+        blackCount);
+    System.out.printf("Red count = %2$d; red pile = %1$s%n", CardListView.toString(redPile),
+        redCount);
   }
 
 }
