@@ -2,6 +2,7 @@ package edu.cnm.deepdive.playingcards;
 
 import edu.cnm.deepdive.playingcards.model.Card;
 import edu.cnm.deepdive.playingcards.model.Deck;
+import edu.cnm.deepdive.playingcards.model.Suit;
 import edu.cnm.deepdive.playingcards.model.Suit.Color;
 import edu.cnm.deepdive.playingcards.service.Trick;
 import edu.cnm.deepdive.playingcards.view.CardListView;
@@ -42,7 +43,11 @@ public class Main {
   }
 
 
-  class ColorComparator implements Comparator<Card> {
+  private static class ColorComparator implements Comparator<Card> {
+
+    private static final Comparator<Card> COMPARATOR =
+        Comparator.comparing(Card::suit, Comparator.comparing(Suit::color))
+            .thenComparing(Comparator.naturalOrder());
 
     private final boolean colorReversed;
 
@@ -52,12 +57,9 @@ public class Main {
 
     @Override
     public int compare(Card card1, Card card2) {
-      int comparisonResult =
-          card1.suit().color().compareTo(card2.suit().color()) * (colorReversed ? -1 : 1);
-      if (comparisonResult == 0) {
-        comparisonResult = card1.compareTo(card2);
-      }
-      return comparisonResult;
+      return colorReversed
+          ? COMPARATOR.reversed().compare(card1, card2)
+          : COMPARATOR.compare(card1, card2);
     }
 
   }
